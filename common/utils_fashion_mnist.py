@@ -4,10 +4,12 @@ import torchvision.transforms as transforms
 import torch
 import sys
 
+
 def get_fashion_mnist_labels(labels):
     text_labels = ['t-shirt', 'trouser', 'pullover', 'dress', 'coat',
                    'sandal', 'shirt', 'sneaker', 'bag', 'ankle boot']
     return [text_labels[int(i)] for i in labels]
+
 
 def show_fashion_mnist(images, labels):
     _, figs = plt.subplots(1, len(images), figsize=(12,12))

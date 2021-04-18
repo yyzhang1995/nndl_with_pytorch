@@ -43,3 +43,6 @@ def evaluate_accuracy(data_iter, net):
         n += y.shape[0]
     return acc_sum / n
 
+def relu(x):
+    return torch.max(input=x, other=torch.tensor(0.0))
+
