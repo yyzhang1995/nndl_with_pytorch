@@ -39,7 +39,15 @@ def softmax(X):
 def evaluate_accuracy(data_iter, net):
     acc_sum, n = 0.0, 0
     for X, y in data_iter:
-        acc_sum += (net(X).argmax(dim=1) == y).float().sum().item()
+        if isinstance(net, torch.nn.Module):
+            net.eval()
+            acc_sum += (net(X).argmax(dim=1) == y).float().sum().item()
+            net.train()
+        else:
+            try:
+                acc_sum += (net(X, is_training=False).argmax(dim=1) == y).float().sum().item()
+            except TypeError:
+                acc_sum += (net(X).argmax(dim=1) == y).float().sum().item()
         n += y.shape[0]
     return acc_sum / n
 
