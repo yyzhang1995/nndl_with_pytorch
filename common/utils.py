@@ -36,12 +36,12 @@ def softmax(X):
     return X_exp / partition
 
 
-def evaluate_accuracy(data_iter, net):
+def evaluate_accuracy(data_iter, net, device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')):
     acc_sum, n = 0.0, 0
     for X, y in data_iter:
         if isinstance(net, torch.nn.Module):
             net.eval()
-            acc_sum += (net(X).argmax(dim=1) == y).float().sum().item()
+            acc_sum += (net(X.to(device)).argmax(dim=1) == y.to(device)).float().sum().cpu().item()
             net.train()
         else:
             try:
@@ -53,4 +53,12 @@ def evaluate_accuracy(data_iter, net):
 
 def relu(x):
     return torch.max(input=x, other=torch.tensor(0.0))
+
+def corr2d(X, K):
+    h, w = K.shape
+    Y = torch.zeros(size=(X.shape[0] - h + 1, X.shape[1] - w + 1))
+    for i in range(Y.shape[0]):
+        for j in range(Y.shape[1]):
+            Y[i, j] = (X[i: i + h, j: j + 2] * K).sum()
+    return Y
 
